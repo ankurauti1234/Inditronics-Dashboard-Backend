@@ -1,0 +1,38 @@
+{
+  "name": "inditronics-apm-backend-server",
+  "version": "1.0.0",
+  "description": "This is the backend server for the Inditronics APM project. It includes:",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk": "^2.2.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jest-mock-req-res": "^1.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.11",
+    "mqtt": "^5.10.1",
+    "nodemailer": "^6.9.15",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.0.1",
+    "chai": "^5.1.1",
+    "jest": "^26.6.3",
+    "mocha": "^10.7.3",
+    "mongodb-memory-server": "^10.0.0",
+    "nodemon": "^2.0.4",
+    "supertest": "^7.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
