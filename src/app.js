@@ -18,11 +18,10 @@ app.use(cors());
 app.use(express.json());
 
 // Serve Swagger API documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-
-app.get('/api', (req, res) => {
-    res.send(`
+app.get("/api", (req, res) => {
+  res.send(`
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +55,7 @@ app.get('/api', (req, res) => {
             color: var(--foreground);
             line-height: 1.5;
         }
-        .container {
+        . {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
@@ -232,10 +231,9 @@ app.get('/api', (req, res) => {
     `);
 });
 
-
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use('/api/sensor', sensorRoutes);
+app.use("/api/sensor", sensorRoutes);
 app.use("/api/mqtt", mqttRoutes);
 app.use("/api/events", eventRoutes);
 
