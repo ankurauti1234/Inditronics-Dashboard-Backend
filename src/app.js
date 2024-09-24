@@ -2,11 +2,9 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("./config/database");
-const mqttClient = require("./mqttClient");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const eventRoutes = require("./routes/eventRoutes");
-const mqttRoutes = require("./routes/mqttRoutes");
 const sensorRoutes = require("./routes/sensorRoutes");
 const dataRoutes = require("./routes/dataRoutes");
 // const authMiddleware = require("./middlewares/authMiddleware");
@@ -235,7 +233,6 @@ app.get("/api", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sensor", sensorRoutes);
-app.use("/api/mqtt", mqttRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/data", dataRoutes);
 
