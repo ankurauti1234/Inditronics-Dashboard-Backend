@@ -1,7 +1,16 @@
 const awsIot = require("aws-iot-device-sdk");
-const { awsIotConfig } = require("./index");
 const SensorData = require("../models/sensorDataModel");
 const Event = require("../models/eventsModel");
+const path = require("path");
+
+const awsIotConfig = {
+  keyPath: path.resolve(__dirname, "./certs/test.private.pem.key"),
+  certPath: path.resolve(__dirname, "./certs/test.cert.pem.crt"),
+  caPath: path.resolve(__dirname, "./certs/root-CA.crt"),
+  clientId: "inditronics-dev-client",
+  host: "a3uoz4wfsx2nz3-ats.iot.ap-south-1.amazonaws.com",
+};
+
 
 const device = awsIot.device(awsIotConfig);
 
