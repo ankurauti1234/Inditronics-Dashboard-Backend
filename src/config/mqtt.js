@@ -1,41 +1,9 @@
 const awsIot = require("aws-iot-device-sdk");
 const { awsIotConfig } = require("./index");
-const path = require("path");
-const fs = require("fs");
-const mqttController = require("../controllers/mqttController");
+const SensorData = require("../models/sensorDataModel");
+const Event = require("../models/eventsModel");
 
-console.log("Current working directory:", process.cwd());
-
-function checkFile(filePath) {
-  try {
-    fs.accessSync(filePath, fs.constants.R_OK);
-    console.log(`File exists and is readable: ${filePath}`);
-    return true;
-  } catch (err) {
-    console.error(`Error accessing file: ${filePath}`, err);
-    return false;
-  }
-}
-
-console.log("AWS IoT Configuration:", JSON.stringify(awsIotConfig, null, 2));
-
-["keyPath", "certPath", "caPath"].forEach((key) => {
-  if (awsIotConfig[key]) {
-    const absolutePath = path.resolve(awsIotConfig[key]);
-    console.log(`${key} absolute path:`, absolutePath);
-    checkFile(absolutePath);
-    awsIotConfig[key] = absolutePath;
-  }
-});
-
-let device;
-try {
-  device = awsIot.device(awsIotConfig);
-  console.log("Device created successfully");
-} catch (error) {
-  console.error("Error creating device:", error);
-  process.exit(1);
-}
+const device = awsIot.device(awsIotConfig);
 
 device.on("connect", () => {
   console.log("Connected to AWS IoT");
@@ -48,14 +16,25 @@ device.on("message", async (topic, payload) => {
 
   try {
     const payloadData = JSON.parse(payload.toString());
-    console.log("Payload data parsed:", payloadData);
-
-    await mqttController.saveMqttData(topic, payloadData);
+    console.log("Payload data parsed:", payloadData); // Debugging log
 
     if (topic === "esp32/sensors") {
-      console.log("Sensor data processed");
+      // Expecting payloadData to be an object with a 'distance' field
+      if (payloadData.distance !== undefined) {
+        const sensorData = new SensorData({
+          distance: payloadData.distance,
+          timestamp: new Date(), // Using current time as timestamp
+        });
+        await sensorData.save();
+        console.log("Sensor data saved to MongoDB");
+      } else {
+        console.log("Invalid sensor data received:", payloadData);
+      }
     } else if (topic === "apm/device/events") {
-      console.log("Event data processed");
+      // Assuming Event model can handle the entire payload
+      const eventData = new Event(payloadData);
+      await eventData.save();
+      console.log("Event data saved to MongoDB");
     }
   } catch (error) {
     console.error("Error processing MQTT message:", error);
