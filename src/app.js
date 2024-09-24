@@ -8,6 +8,7 @@ const userRoutes = require("./routes/userRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const mqttRoutes = require("./routes/mqttRoutes");
 const sensorRoutes = require("./routes/sensorRoutes");
+const dataRoutes = require("./routes/dataRoutes");
 // const authMiddleware = require("./middlewares/authMiddleware");
 const { swaggerUi, specs } = require("../swagger");
 
@@ -236,5 +237,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/sensor", sensorRoutes);
 app.use("/api/mqtt", mqttRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/data", dataRoutes);
 
 module.exports = app;
