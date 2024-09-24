@@ -2,8 +2,47 @@ const awsIot = require("aws-iot-device-sdk");
 const { awsIotConfig } = require("./index");
 const SensorData = require("../models/sensorDataModel");
 const Event = require("../models/eventsModel");
+const path = require("path");
+const fs = require("fs");
 
-const device = awsIot.device(awsIotConfig);
+// Log the current working directory
+console.log("Current working directory:", process.cwd());
+
+// Function to check if a file exists and is readable
+function checkFile(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.R_OK);
+    console.log(`File exists and is readable: ${filePath}`);
+    return true;
+  } catch (err) {
+    console.error(`Error accessing file: ${filePath}`, err);
+    return false;
+  }
+}
+
+// Log and validate the AWS IoT configuration
+console.log("AWS IoT Configuration:", JSON.stringify(awsIotConfig, null, 2));
+
+// Check each file path in the configuration
+["keyPath", "certPath", "caPath"].forEach((key) => {
+  if (awsIotConfig[key]) {
+    const absolutePath = path.resolve(awsIotConfig[key]);
+    console.log(`${key} absolute path:`, absolutePath);
+    checkFile(absolutePath);
+    // Update the config with the absolute path
+    awsIotConfig[key] = absolutePath;
+  }
+});
+
+// Attempt to create the device with error handling
+let device;
+try {
+  device = awsIot.device(awsIotConfig);
+  console.log("Device created successfully");
+} catch (error) {
+  console.error("Error creating device:", error);
+  process.exit(1);
+}
 
 device.on("connect", () => {
   console.log("Connected to AWS IoT");
