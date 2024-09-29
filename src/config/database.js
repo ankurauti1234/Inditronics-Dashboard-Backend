@@ -2,11 +2,14 @@ const mongoose = require("mongoose");
 const config = require("./env/" + (process.env.NODE_ENV || "development"));
 
 mongoose
-  .connect(config.mongoURI, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true, // Add this option
-    useCreateIndex: true, // Use createIndexes for indexing
-  })
+  .connect(
+    "mongodb+srv://inditronics:42069@cluster0.qyxqd84.mongodb.net/inditronics-dev",
+    {
+      useUnifiedTopology: true,
+      useNewUrlParser: true, // Add this option
+      useCreateIndex: true, // Use createIndexes for indexing
+    }
+  )
   .then(() => {
     console.log("MongoDB connected");
   })

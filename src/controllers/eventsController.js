@@ -394,3 +394,14 @@ exports.alertsCount = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.saveEvent = async (eventData) => {
+  try {
+    const event = new Event(eventData);
+    await event.save();
+    console.log("Event saved successfully");
+  } catch (error) {
+    console.error("Error saving event:", error);
+    throw error;
+  }
+};

@@ -1,4 +1,4 @@
-const SensorData = require('../models/sensorDataModel');
+const SensorData = require("../models/sensorDataModel");
 
 exports.getLiveSensorData = async (req, res) => {
   try {
@@ -15,13 +15,14 @@ exports.getLiveSensorData = async (req, res) => {
     const data = await SensorData.find(query)
       .sort({ timestamp: -1 })
       .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+      .limit(parseInt(limit))
+      .select("distance temperature humidity timestamp"); // Include the temperature and humidity fields
 
     res.json({
       data: data,
       currentPage: page,
       totalPages,
-      totalCount
+      totalCount,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
