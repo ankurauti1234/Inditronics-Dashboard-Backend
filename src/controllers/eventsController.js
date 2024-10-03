@@ -224,7 +224,7 @@ exports.getLatestEventByDeviceId = async (req, res) => {
 // Get Latest Alerts 
 exports.getAlerts = async (req, res) => {
   try {
-    const { DEVICE_ID, Type, page = 1, limit = 10 } = req.query;
+    const { DEVICE_ID, Type, AlertType, page = 1, limit = 10 } = req.query;
 
     const matchStage = {
       Type: { $in: alertTypes },
@@ -250,6 +250,14 @@ exports.getAlerts = async (req, res) => {
       }
     }
 
+    // Handle AlertType filter
+    if (AlertType) {
+      const validAlertTypes = ["Generated", "Pending", "Resolved"];
+      if (validAlertTypes.includes(AlertType)) {
+        matchStage.AlertType = AlertType;
+      }
+    }
+
     // Calculate pagination options
     const skip = (page - 1) * limit;
     const limitNumber = parseInt(limit, 10);
@@ -265,7 +273,7 @@ exports.getAlerts = async (req, res) => {
       ...event,
       eventName: eventTypeMapping[event.Type] || "Unknown Event",
     }));
-      
+
     const totalAlerts = await Event.countDocuments(matchStage);
 
     res.json({
@@ -278,8 +286,6 @@ exports.getAlerts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 // Get Alerts Count by Type, AlertType, and combined Type + AlertType
 exports.alertsCount = async (req, res) => {
